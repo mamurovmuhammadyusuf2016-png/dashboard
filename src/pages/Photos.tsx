@@ -7,7 +7,7 @@ import { db, type Photo } from '../db'
 import { exifDate, downloadBlob, preparePhoto, useObjectUrl } from '../lib/images'
 import { fmtDate, todayStr } from '../lib/format'
 import { storageInfo } from '../lib/backup'
-import { Button, Card, Chip, Empty, Field, IconButton, Input, Modal, PageHeader, cx } from '../components/ui'
+import { Button, Card, Chip, Empty, Field, IconButton, Input, PageHeader, cx } from '../components/ui'
 
 function Thumb({ p, onClick }: { p: Photo; onClick: () => void }) {
   const url = useObjectUrl(p.thumb)
@@ -192,9 +192,6 @@ function Lightbox({ photo, albums, onClose, onPrev, onNext }: { photo: Photo | n
           </datalist>
         </Field>
       </div>
-      <Modal open={false} onClose={() => {}}>
-        <span />
-      </Modal>
     </div>
   )
 }

@@ -37,6 +37,7 @@ export default function Health() {
   const weekAvg = Math.round(week.reduce((a, d) => a + (byDate.get(d)?.steps ?? 0), 0) / 7)
   const lastWeight = [...metrics].reverse().find((m) => m.weight)
   const weight30 = metrics.find((m) => m.weight && m.date >= format(subDays(new Date(), 30), 'yyyy-MM-dd'))
+  const weightDelta = lastWeight?.weight && weight30?.weight && weight30.date !== lastWeight.date ? lastWeight.weight - weight30.weight : null
   const lastSleep = [...metrics].reverse().find((m) => m.sleep)
   const sleepAvg = week.reduce((a, d) => a + (byDate.get(d)?.sleep ?? 0), 0) / Math.max(1, week.filter((d) => byDate.get(d)?.sleep).length)
 
@@ -160,7 +161,7 @@ export default function Health() {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="Шаги сегодня" value={fmtNum(todaySteps)} sub={`цель ${fmtNum(s.stepGoal)}`} icon={<Footprints size={16} />} tone={todaySteps >= s.stepGoal ? 'good' : undefined} />
         <Stat label="Среднее за неделю" value={fmtNum(weekAvg)} sub="шагов в день" />
-        <Stat label="Вес" value={lastWeight?.weight ? `${lastWeight.weight} кг` : '—'} sub={lastWeight && weight30?.weight && weight30.date !== lastWeight.date ? `${(lastWeight.weight! - weight30.weight).toFixed(1) > '0' ? '+' : ''}${(lastWeight.weight! - weight30.weight).toFixed(1)} кг за 30 дней` : s.weightGoal ? `цель ${s.weightGoal} кг` : undefined} icon={<Scale size={16} />} />
+        <Stat label="Вес" value={lastWeight?.weight ? `${lastWeight.weight} кг` : '—'} sub={weightDelta !== null ? `${weightDelta > 0 ? '+' : ''}${weightDelta.toFixed(1)} кг за 30 дней` : s.weightGoal ? `цель ${s.weightGoal} кг` : undefined} icon={<Scale size={16} />} />
         <Stat label="Сон" value={lastSleep?.sleep ? `${lastSleep.sleep} ч` : '—'} sub={sleepAvg ? `в среднем ${sleepAvg.toFixed(1)} ч` : undefined} icon={<Moon size={16} />} />
       </div>
 
