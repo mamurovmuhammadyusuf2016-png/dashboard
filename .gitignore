@@ -1,0 +1,19 @@
+node_modules
+dist
+dev-dist
+*.log
+.DS_Store
+.env
+.env.*
+
+# Android (Capacitor)
+android/.gradle
+android/build
+android/app/build
+android/app/src/main/assets/public
+android/app/src/main/res/raw/config.xml
+android/capacitor-cordova-android-plugins
+android/local.properties
+android/.idea
+android/*.iml
+android/app/*.iml
