@@ -37,6 +37,7 @@ export default function Today() {
   const lastWeight = useLiveQuery(() => db.metrics.orderBy('date').reverse().filter((m) => m.weight !== undefined).first(), [])
   const goals = useLiveQuery(() => db.goals.where('done').equals(0).limit(3).toArray(), []) ?? []
   const events = useLiveQuery(() => db.events.toArray(), []) ?? []
+  const extEvents = useLiveQuery(() => db.calendarEvents.where('end').above(Date.now()).and((e) => e.start < Date.now() + 14 * 86400000).limit(10).toArray(), []) ?? []
   const notes = useLiveQuery(() => db.notes.where('pinned').equals(1).limit(3).toArray(), []) ?? []
   const txCount = useLiveQuery(() => db.transactions.count(), [])
   const memory = useLiveQuery(async () => {
@@ -70,11 +71,13 @@ export default function Today() {
   const budgetedIds = new Set(cats.filter((c) => c.type === 'expense' && c.budget).map((c) => c.id))
   const spentBudgeted = txs.reduce((a, x) => a + (x.type === 'expense' && budgetedIds.has(x.categoryId) ? x.amount : 0), 0)
   const doneIds = new Set(logsToday.map((l) => l.habitId))
-  const upcoming = events
-    .map((e) => ({ e, n: nextOccurrence(e, today) }))
-    .filter((x) => x.n.days >= 0)
-    .sort((a, b) => a.n.days - b.n.days)
-    .slice(0, 3)
+  const upcoming = [
+    ...events.map((e) => ({ id: 'o' + e.id, emoji: e.emoji, name: e.name, days: nextOccurrence(e, today).days })),
+    ...extEvents.map((e) => ({ id: 'x' + e.id, emoji: '📆', name: e.title, days: Math.max(0, Math.round((new Date(e.start).setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) / 86400000)) })),
+  ]
+    .filter((x) => x.days >= 0)
+    .sort((a, b) => a.days - b.days)
+    .slice(0, 4)
 
   async function toggleHabit(id: number) {
     const ex = await db.habitLogs.where('[habitId+date]').equals([id, today]).first()
@@ -228,11 +231,11 @@ export default function Today() {
               <div className="text-sm text-muted">Добавь дни рождения и события.</div>
             ) : (
               <div className="space-y-2">
-                {upcoming.map(({ e, n }) => (
-                  <div key={e.id} className="flex items-center gap-3 text-sm">
-                    <span className="text-xl">{e.emoji}</span>
-                    <span className="flex-1 truncate">{e.name}</span>
-                    <span className="text-xs text-muted tabular">{n.days === 0 ? 'сегодня' : `через ${n.days} ${daysWord(n.days)}`}</span>
+                {upcoming.map((u) => (
+                  <div key={u.id} className="flex items-center gap-3 text-sm">
+                    <span className="text-xl">{u.emoji}</span>
+                    <span className="flex-1 truncate">{u.name}</span>
+                    <span className="text-xs text-muted tabular">{u.days === 0 ? 'сегодня' : `через ${u.days} ${daysWord(u.days)}`}</span>
                   </div>
                 ))}
               </div>

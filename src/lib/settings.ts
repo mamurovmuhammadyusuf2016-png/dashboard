@@ -11,6 +11,8 @@ export interface Settings {
   weightGoal?: number
   healthConnected: boolean
   healthLastSync?: number
+  calendarConnected?: boolean
+  calendarLastSync?: number
   demoLoaded?: boolean
 }
 

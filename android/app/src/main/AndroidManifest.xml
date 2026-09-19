@@ -40,4 +40,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Health Connect: read steps history older than 30 days -->
     <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_HISTORY" />
+    <!-- Phone calendar (Samsung Calendar, Google Calendar) -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
 </manifest>

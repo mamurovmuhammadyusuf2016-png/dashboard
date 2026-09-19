@@ -7,8 +7,8 @@ android {
         applicationId "uz.mydash.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode (System.getenv("VERSION_CODE") ?: "1").toInteger()
-        versionName (System.getenv("VERSION_NAME") ?: "0.1.0")
+        versionCode = (System.getenv("VERSION_CODE") ?: "1").toInteger()
+        versionName = System.getenv("VERSION_NAME") ?: "0.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -20,17 +20,17 @@ android {
         release {
             // Defaults to the keystore committed in android/keystore so that every build
             // installs over the previous one. Override with env vars (CI secrets) for a private key.
-            storeFile file(System.getenv("RELEASE_KEYSTORE_FILE") ?: "../keystore/dashboard.jks")
-            storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: "dashboard"
-            keyAlias System.getenv("RELEASE_KEY_ALIAS") ?: "dashboard"
-            keyPassword System.getenv("RELEASE_KEY_PASSWORD") ?: "dashboard"
+            storeFile = file(System.getenv("RELEASE_KEYSTORE_FILE") ?: "../keystore/dashboard.jks")
+            storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: "dashboard"
+            keyAlias = System.getenv("RELEASE_KEY_ALIAS") ?: "dashboard"
+            keyPassword = System.getenv("RELEASE_KEY_PASSWORD") ?: "dashboard"
         }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig = signingConfigs.release
         }
     }
 }

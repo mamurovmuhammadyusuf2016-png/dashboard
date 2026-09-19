@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
-import { CalendarDays, CircleCheck, Gift, HeartPulse, Home, Image, LayoutGrid, NotebookPen, Settings, Smile, Target, Wallet } from 'lucide-react'
+import { Calendar, CalendarDays, CircleCheck, Gift, HeartPulse, Home, Image, LayoutGrid, NotebookPen, Settings, Smile, Target, Wallet } from 'lucide-react'
 import { Modal, cx } from './ui'
 
 const MAIN = [
@@ -10,6 +10,7 @@ const MAIN = [
   { to: '/notes', label: 'Заметки', icon: NotebookPen },
 ]
 const MORE = [
+  { to: '/calendar', label: 'Календарь', icon: Calendar },
   { to: '/habits', label: 'Привычки', icon: CircleCheck },
   { to: '/mood', label: 'Настроение', icon: Smile },
   { to: '/goals', label: 'Цели', icon: Target },

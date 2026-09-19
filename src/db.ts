@@ -118,6 +118,19 @@ export interface Setting {
   value: unknown
 }
 
+/** Event pulled from the phone calendar (Samsung/Google) or imported from an .ics file */
+export interface ExtEvent {
+  id: number
+  externalId: string
+  title: string
+  start: number // ms
+  end: number // ms
+  allDay: 0 | 1
+  calendar?: string
+  location?: string
+  source: 'device' | 'ics'
+}
+
 export const db = new Dexie('mydash') as Dexie & {
   transactions: EntityTable<Transaction, 'id'>
   categories: EntityTable<Category, 'id'>
@@ -132,6 +145,7 @@ export const db = new Dexie('mydash') as Dexie & {
   wishes: EntityTable<Wish, 'id'>
   events: EntityTable<LifeEvent, 'id'>
   settings: EntityTable<Setting, 'key'>
+  calendarEvents: EntityTable<ExtEvent, 'id'>
 }
 
 db.version(1).stores({
@@ -148,6 +162,10 @@ db.version(1).stores({
   wishes: '++id, bought, priority',
   events: '++id, date',
   settings: 'key',
+})
+
+db.version(2).stores({
+  calendarEvents: '++id, externalId, start, end, source',
 })
 
 export const defaultCategories: Omit<Category, 'id'>[] = [
@@ -184,5 +202,6 @@ export const tableNames = [
   'wishes',
   'events',
   'settings',
+  'calendarEvents',
 ] as const
 export type TableName = (typeof tableNames)[number]
